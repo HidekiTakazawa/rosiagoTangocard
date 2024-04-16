@@ -60,7 +60,7 @@
       display: block;
     }
 
-    #inputHangul {
+    #inputRussian {
       display: inline-block;
       width: 200px;
       height: 50px;
@@ -129,7 +129,7 @@
       margin-top: 20px;
       margin-left: 20px;
       background-color: skyblue;
-      width: 90px;
+      width: 110px;
       height: 30px;
     }
 
@@ -249,7 +249,8 @@
 
   </div>
   <form class="formDisplay formDisplayNone">
-    <input id="inputHangul" type="text">
+    <!-- <input id="inputRussian" type="text"> -->
+    <textarea id="inputRussian"></textarea>
     <button id="chkInput">チェック</button>
     <p id="comment"></p>
   </form>
@@ -271,9 +272,9 @@
     let currentIndex = -1;
     let correctCount = 0;
     let incorrectCount = 0;
-    let isHangul = false;
-    let isHangulCheck = false;
-    let textHangul;  // 　ピンイン削除後の中国語を記憶
+    let isRussian = false;
+    let isRussianCheck = false;
+    let textRussian;  // 　ピンイン削除後の中国語を記憶
 
     const flashcard = document.getElementById('flashcard');
     // const button = document.querySelector('button');
@@ -313,7 +314,7 @@
    
     // const pinyinInput = document.getElementById('pinyinInput');
     const formDisplay = document.querySelector('.formDisplay');
-    const inputHangul = document.getElementById('inputHangul');
+    const inputRussian = document.getElementById('inputRussian');
     const chkInput = document.getElementById('chkInput');
     const showCard = document.querySelector('.showCard');
     let comment = document.getElementById('comment');
@@ -326,12 +327,12 @@
    //
    chkbox.addEventListener('change', () => {
       if (chkbox.checked) {
-        isHangul = true;
-        inputHangul.value = '';
-        isHangulCheck = false;
+        isRussian = true;
+        inputRussian.value = '';
+        isRussianCheck = false;
         comment.textContent = '';
       } else {
-        isHangul = false;
+        isRussian = false;
         fncFormDisplayNone();
         comment.textContent = '';
       }
@@ -341,33 +342,33 @@
    //
     chkInput.addEventListener('click', (e) => {
       e.preventDefault();
-      if (isHangulCheck) {
-        isHangulCheck = false;
+      if (isRussianCheck) {
+        isRussianCheck = false;
         chkInput.textContent = 'チェック';
         fncFormDisplayNone();
         showAnswer();
-        inputHangul.value = '';
-        inputHangul.focus();
+        inputRussian.value = '';
+        inputRussian.focus();
         comment.textContent = '';
       } else {
 
 
         showAnswer();
         chkInput.textContent = 'Next';
-        isHangulCheck = true;
+        isRussianCheck = true;
         // showCard.classList.add('showCardBlock');
         // showCard.classList.remove('showCardNone');
-        console.log(inputHangul.value);
+        console.log(inputRussian.value);
         console.log(`flash= ${flashcardData2[currentIndex]}`);
-        console.log(`textHangul=${textHangul}`);
-        if (textHangul === inputHangul.value) {
-          comment.textContent = '正解です👍';
-          speakText3(comment.textContent);
+        console.log(`textRussian=${textRussian}`);
+        if (textRussian === inputRussian.value) {
+          comment.textContent = 'Ответ правильный.';
+          speakText(comment.textContent);
           console.log('seikai')
           correctCount++;
         } else {
-          comment.textContent = '間違いだ！！';
-          speakText3(comment.textContent);
+          comment.textContent = 'Ответ неправильный.';
+          speakText(comment.textContent);
           console.log('fuseikai');
           incorrectCount++;
         }
@@ -388,7 +389,7 @@
       showCard.classList.add('showCardBlock');
       showCard.classList.remove('showCardNone');
       let result = document.querySelector('.result');
-      if (isPinyin) {
+      if (isRussian) {
         result.classList.add('resultBlock');
         result.classList.remove('resultNone');
         displayResult();
@@ -475,7 +476,7 @@
 
       currentIndex++;
       if (currentIndex === flashcardData2.length) {
-        if (isHangul) {
+        if (isRussian) {
           totalGrade.classList.add('totalGradeDisplay');
           totalGrade.classList.remove('totalGradeNoDisplay');
           let totalSeitouritsu = document.getElementById('totalSeitouritsu');
@@ -485,9 +486,9 @@
           totalSeitouritsu.textContent = `正答数は${correctCount}, 正答率は${ritsu.toFixed(1)}でした。`;
           if (correctCount === mondaisu) {
 
-            totalComment.textContent = 'おめでとうございます。!!';
+            totalComment.textContent = 'ВЫ отвели на все вопросы правильно. Поздравляю.';
 
-            speakText3('おめでとうございます。!!');
+            speakText('ВЫ отвели на все вопросы правильно. Поздравляю.');
           } else {
             totalComment.textContent = '';
 
@@ -519,7 +520,7 @@
       }
       //
       if (currentData[0] === 'jp') {
-        if (isHangul) {
+        if (isRussian) {
           formDisplay.classList.add('formDisplayBlock');
           formDisplay.classList.remove('formDisplayNone');
           showCard.classList.add('showCardNone');
@@ -595,7 +596,7 @@
     
     // テキストを音声に変換して再生する関数
     function speakText(text) {
-      textHangul = text;
+      textRussian = text;
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'ru-RU'; // 中国語の言語コード
       synth.speak(utterance);
@@ -607,26 +608,8 @@
       utterance.lang = 'ru-RU'; // 中国語の言語コード
       synth.speak(utterance);
     }
-    // テキストを音声に変換して再生する関数
-    function speakText3(text) {
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ja-JP'; // 中国語の言語コード
-      synth.speak(utterance);
-    }
-    // 正解不正解の判断
-    function checkAnswer(isCorrect) {
-      // ここに正解不正解の処理を追加する
-      if (isCorrect) {
-        correctCount++;
-      } else {
-        incorrectCount++;
-      }
-
-      // 結果を表示する
-      displayResult();
-    }
-
+   
+    
     // 結果を表示する関数
     function displayResult() {
       resultDiv.textContent = `正解: ${correctCount} 回 不正解: ${incorrectCount} 回`;
