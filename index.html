@@ -7,7 +7,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ロシア語単語カード</title>
   <style>
+    .header {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      z-index: 10;
+      background-color: #f4c4ee;
+      width: 100%;
+
+
+    }
+
+    .divTangoCardDisplay {
+      display: block;
+    }
+
+    .divTangoCardNoDisplay {
+      display: none;
+    }
+
     #flashcard {
+      margin-top: 120px;
       width: 320px;
       height: 200px;
       border: 1px solid #000;
@@ -113,6 +133,43 @@
       border-radius: 6px
     }
 
+    #btnKensaku {
+      display: none;
+    }
+
+    #resultKensaku {
+      position: relative;
+      top: 100px;
+      left: 0px;
+      z-index: 1;
+      width: auto;
+
+      /* padding-top: 12px; */
+      background-color: white;
+
+    }
+
+    .resultKensakuDisplay {
+      display: block;
+    }
+
+    .resultKensakuNoDisplay {
+      display: none;
+
+    }
+
+    #resultKensakuClear {
+      margin: 10px 10px;
+      width: 100px;
+      height: 50px;
+      cursor: pointer;
+      background-color: skyblue;
+
+      text-align: center;
+      line-height: 50px;
+      border-radius: 6px
+    }
+
     .imgDivDisplay {
       display: block;
 
@@ -121,6 +178,7 @@
     .imgDivNoDisplay {
       display: none;
     }
+
     #etcInfo {
       display: flex;
     }
@@ -179,6 +237,50 @@
       color: red;
     }
 
+    .classImageSize {
+      width: 100px;
+      height: 100px;
+    }
+
+    #kensaku {
+      margin-left: 10px;
+    }
+
+    .clkBtn {
+      cursor: pointer;
+      user-select: none;
+      background-color: #fffacd;
+    }
+    .loading {
+      position: fixed;
+      top: 100px;
+      left: 100px;
+      z-index: 99;
+      content: '';
+      display: block;
+      margin: auto;
+      width: 300px;
+      border: 4px solid #ccc;
+      border-right-color: #0AC;
+      border-radius: 100px;
+      width: 30px;
+      height: 30px;
+      background-color: white;
+      animation: rotation 0.6s linear infinite;
+    }
+
+    @keyframes rotation {
+      from {
+        transform: rotate(0);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+
+
     @keyframes fadeIn {
       0% {
         opacity: 0;
@@ -202,10 +304,11 @@
 </head>
 
 <body>
+  <div id="kurukuru" class="loading"></div>
   <div class="header">
     <div class="header2">
       <div class="logo">
-        <h3>ロシア語　単語カード</h3>
+        <h3>単語カード</h3>
 
 
       </div>
@@ -214,9 +317,7 @@
 
       </div>
       <div class="linkurl">
-        <a id="flash"
-          href="https://hidekitakazawa.github.io/rosiagotangocyou/"
-          target="_blank">ロシア語単語帳</a>
+        <a id="flash" href="https://hidekitakazawa.github.io/rosiagotangocyou/" target="_blank">ロシア語単語帳</a>
         <!-- <a id="ikeda" href="index6.Chinese" target="_blank">使用手引書</a> -->
 
       </div>
@@ -224,40 +325,57 @@
     <div id="header3">
       <!-- シートセレクトボックス -->
       <div class="sheetSelect">
-  
+
         <label for="sheet-select">シート選択：</label><select id="sheet-select" name="sheetSelect"></select>
       </div>
       <div id="questionNo"></div>
+      <div id="kensaku">
+        <form>
+          <input type="text" id="myInput" placeholder="検索したい言葉を入力してください。">
+          <button id="btnKensaku">検索</button>
+        </form>
+      </div>
     </div>
   </div>
-  <div id="flashcard">Click to see definition</div>
-  <div id="etcInfo">
-    <div id="imgDiv" class="imgDivNoDisplay">
-      <a id="aGazou" target="_blank"><img id="imgGazou" width="100" height="100"></a>
-  
-    </div>
-    <div id="Internet" class="internetNodisplay">
-      <a id="infoInternet">参考サイト</a>
+  <!-- hajime -->
+  <div id="divTangoCard" class="divTangoCardDisplay">
+
+    <div id="flashcard">Click to see definition</div>
+    <div id="etcInfo">
+      <div id="imgDiv" class="imgDivNoDisplay">
+        <a id="aGazou" target="_blank"><img id="imgGazou" width="100" height="100"></a>
+
+      </div>
+      <div id="Internet" class="internetNodisplay">
+        <a id="infoInternet">参考サイト</a>
+
+      </div>
 
     </div>
 
-  </div>
+    <div class="showCard showCardBlock">
+      <button onclick="showPreviousCard()">Before</button>
+      <button onclick="showAnswer()">Next</button>
 
-  <div class="showCard showCardBlock">
-    <button onclick="showPreviousCard()">Before</button>
-    <button onclick="showAnswer()">Next</button>
+    </div>
+    <form class="formDisplay formDisplayNone">
+      <!-- <input id="inputRussian" type="text"> -->
+      <textarea id="inputRussian"></textarea>
+      <button id="chkInput">チェック</button>
+      <p id="comment"></p>
+    </form>
+    <div id="resultID" class="result resultNone">正解: 0 回 不正解: 0 回</div>
+    <div class="totalGrade totalGradeNoDisplay">
+      <p id="totalSeitouritsu"></p>
+      <p id="totalComment"></p>
 
+    </div>
   </div>
-  <form class="formDisplay formDisplayNone">
-    <!-- <input id="inputRussian" type="text"> -->
-    <textarea id="inputRussian"></textarea>
-    <button id="chkInput">チェック</button>
-    <p id="comment"></p>
-  </form>
-  <div id="resultID" class="result resultNone">正解: 0 回 不正解: 0 回</div>
-  <div class="totalGrade totalGradeNoDisplay">
-    <p id="totalSeitouritsu"></p>
-    <p id="totalComment"></p>
+  <!-- owari -->
+  <div id="resultKensaku" class="resultKensakuNoDisplay">
+    <!-- <div id="resultKensakuContent"> -->
+
+
 
   </div>
 
@@ -281,8 +399,9 @@
     const sheetSelector = document.getElementById("sheet-select");
     let termSave;  //  フラッシュカードをクリックしたときに表示内容が中国語かどうかを判定するため
 
-
-
+    let tdOLD;
+    let tdOLDColor;  
+    let kurukuru = document.getElementById('kurukuru');
     const synth = window.speechSynthesis;
     // 非同期処理　すブレッドシートの単語カード読み込み関数
     // 読み込みが成功すればflashcardDataにデータを格納する。
@@ -299,6 +418,7 @@
         flashcardDatas = JSON.parse(result);
         flashcardData = JSON.parse(result)[1];
         flashcardData2 = flashcardGenerate(flashcardData);
+        kurukuru.remove();
 
       }).fail((error) => {  // 失敗した時の処理
         alert('Error:' + JSON.stringify(error));
@@ -311,7 +431,7 @@
     flashcardYomikomi();  // スプレッドシート読み込み
     const resultDiv = document.getElementById('resultID');
     // 2024-03-12
-   
+
     // const pinyinInput = document.getElementById('pinyinInput');
     const formDisplay = document.querySelector('.formDisplay');
     const inputRussian = document.getElementById('inputRussian');
@@ -322,10 +442,15 @@
     const imgDiv = document.getElementById('imgDiv');
     const aGazou = document.getElementById('aGazou');
     const imgGazou = document.getElementById('imgGazou');
-    
+
     const questionNo = document.getElementById('questionNo');
-   //
-   chkbox.addEventListener('change', () => {
+    const resultKensaku = document.getElementById('resultKensaku');
+    let resultKensakuContent = document.getElementById('resultKensakuContent');
+    let resultKensakuClear = document.getElementById('resultKensakuClear');
+    const myInput = document.getElementById('myInput');
+    const divTangoCard = document.getElementById('divTangoCard');
+    //
+    chkbox.addEventListener('change', () => {
       if (chkbox.checked) {
         isRussian = true;
         inputRussian.value = '';
@@ -339,7 +464,7 @@
       chkboxChenged();
 
     });
-   //
+    //
     chkInput.addEventListener('click', (e) => {
       e.preventDefault();
       if (isRussianCheck) {
@@ -399,7 +524,7 @@
 
       }
       fncImageNoDisplay();
-      
+
     }
     // 2024/03/12
     // シート選択されたときの処理
@@ -419,8 +544,8 @@
       questionNo.textContent = '';
       fncFormDisplayNone();
       fncImageNoDisplay();
-      
-      
+
+
       displayResult();
       flashcard.textContent = 'カードをめくってね！';
       totalGrade.classList.remove('totalGradeDisplay');
@@ -467,7 +592,7 @@
       }
       return flashcardData2;
     }
-    
+
 
 
 
@@ -511,7 +636,7 @@
       let strQuestionNo = `${currentData[4]}/${flashcardData2.length / 2}`;
       questionNo.textContent = strQuestionNo;
 
-      
+
       termSave = currentData[0];
       // termがChineseの時に中国だから　Chineseの時だけspeakTextを呼び出す。
       if (currentData[0] === 'ru') {
@@ -593,7 +718,7 @@
       }
     }
 
-    
+
     // テキストを音声に変換して再生する関数
     function speakText(text) {
       textRussian = text;
@@ -608,8 +733,25 @@
       utterance.lang = 'ru-RU'; // 中国語の言語コード
       synth.speak(utterance);
     }
-   
-    
+
+    // テキストを音声に変換して再生する関数
+    function speakText3(param1) {
+      const td = param1;
+       //2023/04/27 追加　背景色
+       if (tdOLD === undefined){
+          tdOLD = param1;
+          tdOLDColor = tdOLD.style.backgroundColor;
+        } else {
+          tdOLD.style.backgroundColor = tdOLDColor;
+          tdOLD = param1;
+        }
+        //2023/04/27 追加　背景色
+        td.style.backgroundColor = 'cyan';
+
+      const utterance = new SpeechSynthesisUtterance(td.textContent);
+      utterance.lang = 'ru-RU'; // 中国語の言語コード
+      synth.speak(utterance);
+    }
     // 結果を表示する関数
     function displayResult() {
       resultDiv.textContent = `正解: ${correctCount} 回 不正解: ${incorrectCount} 回`;
@@ -625,6 +767,126 @@
         speakText(flashcard.textContent);
       }
     });
+    //
+    const btnKensaku = document.getElementById('btnKensaku');
+    btnKensaku.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (resultKensaku.contains(resultKensakuContent)) {
+        resultKensakuContent.remove();
+
+      }
+      divTangoCard.classList.add('divTangoCardNoDisplay');
+      divTangoCard.classList.remove('divTangoCardDisplay');
+      resultKensakuContent = document.createElement('div');
+      resultKensakuContent.setAttribute('id', 'resultKensakuContent');
+      resultKensaku.appendChild(resultKensakuContent);
+      resultKensaku.classList.remove('resultKensakuNoDisplay');
+      resultKensaku.classList.add('resultKensakuDisplay');
+      var input, filter, i, txtValue, div, table, tbody, tr, td;
+      input = document.getElementById('myInput');
+      filter = input.value;
+
+
+      table = document.createElement('table');
+      table.setAttribute('border', '1');
+      resultKensakuContent.appendChild(table);
+      tbody = document.createElement('tbody');
+      table.appendChild(tbody);
+      let isFind = false;
+      for (i = 1; i < flashcardDatas.length; i++) {
+        for (let j = 0; j < flashcardDatas[i].length; j++) {
+          let sheetName = flashcardDatas[0][i - 1];
+          if (sheetName.indexOf(filter) > -1 || flashcardDatas[i][j][1].indexOf(filter) > -1 || flashcardDatas[i][j][2].indexOf(filter) > -1 || filter === 'all') {
+            console.log(flashcardDatas[i][j]);
+            isFind = true;
+
+            //
+
+            tr = document.createElement('tr');
+            td = document.createElement('td');
+            // td.textContent = flashcardDatas[0][i - 1];
+            td.textContent = sheetName;
+            tr.appendChild(td);
+
+
+            td = document.createElement('td');
+            td.textContent = flashcardDatas[i][j][1];
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.textContent = flashcardDatas[i][j][2];
+            td.setAttribute('onclick', 'speakText3(this)');
+            td.setAttribute('class', 'clkBtn');
+
+
+            tr.appendChild(td);
+            // td = document.createElement('td');
+            // td.textContent = flashcardDatas[i][j][3];
+            // tr.appendChild(td);
+            //  internet
+            if (flashcardDatas[i][j][4] !== '') {
+              td = document.createElement('td');
+              let atag = document.createElement('a');
+
+              let gazouURL0 = flashcardDatas[i][j][4];
+              atag.setAttribute('href', gazouURL0);
+              atag.setAttribute('class', 'classGazou');
+              atag.setAttribute('target', '_blank');
+              atag.textContent = '参考サイト'
+              td.appendChild(atag);
+              tr.appendChild(td);
+            }
+            //  画像
+            if (flashcardDatas[i][j][3] !== '') {
+              td = document.createElement('td');
+              let atag = document.createElement('a');
+
+              let gazouURL0 = flashcardDatas[i][j][3];
+              atag.setAttribute('href', gazouURL0);
+              atag.setAttribute('class', 'classGazou');
+              atag.setAttribute('target', '_blank');
+
+              td.appendChild(atag);
+              tr.appendChild(td);
+              let img = document.createElement('img');
+
+
+              img.setAttribute('src', gazouURL0);
+              img.setAttribute('class', 'classGazou classImageSize');
+              atag.appendChild(img);
+              td.appendChild(atag);
+              tr.appendChild(td);
+            }
+
+
+
+
+          } else {
+            isFind = false;
+          }
+          if (isFind) {
+
+            tbody.appendChild(tr);
+          }
+
+        }
+      }
+      resultKensakuClear = document.createElement('div');
+      resultKensakuClear.setAttribute('id', 'resultKensakuClear');
+      resultKensakuClear.textContent = '戻る';
+      resultKensakuClear.setAttribute('onclick', 'fncresultKensakuClear()');
+      resultKensakuContent.appendChild(resultKensakuClear);
+    });
+    //
+    function fncresultKensakuClear() {
+      divTangoCard.classList.remove('divTangoCardNoDisplay');
+      divTangoCard.classList.add('divTangoCardDisplay');
+      resultKensakuContent.remove();
+      myInput.value = '';
+      resultKensaku.classList.add('resultKensakuNoDisplay');
+      resultKensaku.classList.remove('resultKensakuDisplay');
+    }
+
   </script>
 </body>
 
