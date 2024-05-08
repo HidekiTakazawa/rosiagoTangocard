@@ -111,7 +111,7 @@
 
     #flash {
       display: inline-block;
-      width: 170px;
+      width: 80px;
       height: 40px;
       cursor: pointer;
       background-color: skyblue;
@@ -123,7 +123,7 @@
 
     #ikeda {
       display: inline-block;
-      width: 100px;
+      width: 80px;
       height: 40px;
       cursor: pointer;
       background-color: pink;
@@ -317,8 +317,8 @@
 
       </div>
       <div class="linkurl">
-        <a id="flash" href="https://hidekitakazawa.github.io/rosiagotangocyou/" target="_blank">ロシア語単語帳</a>
-        <!-- <a id="ikeda" href="index6.Chinese" target="_blank">使用手引書</a> -->
+        <a id="flash" href="https://hidekitakazawa.github.io/rosiagotangocyou/" target="_blank">例文</a>
+        <a id="ikeda" href="https://docs.google.com/document/d/15qTuo_p9x53-KFgHX7OGNamSJ0rO7iPoYa9YYyDaQ-E/edit?usp=sharing" target="_blank">Help</a>
 
       </div>
     </div>
@@ -486,7 +486,7 @@
         console.log(inputRussian.value);
         console.log(`flash= ${flashcardData2[currentIndex]}`);
         console.log(`textRussian=${textRussian}`);
-        if (textRussian === inputRussian.value) {
+        if (flashcardData2[currentIndex][1] === inputRussian.value) {
           comment.textContent = 'Ответ правильный.';
           speakText(comment.textContent);
           console.log('seikai')
